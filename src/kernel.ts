@@ -1,11 +1,14 @@
 import ProgramHandler from "./ProgramHandler";
-import { IKernelProgram } from "./types/IKernel";
+import { IKernelProgram, IEventMap, IEventHandler, IUnsubscribeEvent } from "./types/IKernel";
+import KernelEvents from "./KernelEvents";
 
 class Kernel {
     programHandler;
+    eventHandler;
     
     constructor() {
         this.programHandler = new ProgramHandler();
+        this.eventHandler = new KernelEvents();
     }
 
     registerPrograms(programs: IKernelProgram) {
@@ -22,6 +25,18 @@ class Kernel {
 
     destroy(programName: string) {
         this.programHandler.endProgram(programName);
+    }
+
+    emit<K extends keyof IEventMap>(type: K, detail: IEventMap[K] = {}) {
+        this.eventHandler.emit(type, detail);
+    }
+
+    on<K extends keyof IEventMap>(type: K, handler: IEventHandler<IEventMap[K]>, options?: AddEventListenerOptions) {
+        return this.eventHandler.on(type, handler, options);
+    }
+
+    once<K extends keyof IEventMap>(type: K, handler: IEventHandler<IEventMap[K]>) {
+        this.eventHandler.once(type, handler);
     }
 }
 
