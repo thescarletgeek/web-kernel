@@ -1,5 +1,41 @@
 /******/ var __webpack_modules__ = ({
 
+/***/ "./src/KernelEvents.ts"
+/*!*****************************!*\
+  !*** ./src/KernelEvents.ts ***!
+  \*****************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class KernelEvents extends EventTarget {
+  on(type, handler, options) {
+    this.addEventListener(type, handler, options);
+    return () => this.off(type, handler);
+  }
+  once(type, handler) {
+    this.addEventListener(type, handler, {
+      once: true
+    });
+  }
+  off(type, handler) {
+    this.removeEventListener(type, handler);
+  }
+  emit(type, detail = {}) {
+    return this.dispatchEvent(new CustomEvent(type, {
+      detail
+    }));
+  }
+  destroy() {
+    // this.replaceWith?.(null);
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (KernelEvents);
+
+/***/ },
+
 /***/ "./src/ProgramHandler.ts"
 /*!*******************************!*\
   !*** ./src/ProgramHandler.ts ***!
@@ -58,10 +94,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ProgramHandler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProgramHandler */ "./src/ProgramHandler.ts");
+/* harmony import */ var _KernelEvents__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KernelEvents */ "./src/KernelEvents.ts");
+
 
 class Kernel {
   constructor() {
     this.programHandler = new _ProgramHandler__WEBPACK_IMPORTED_MODULE_0__["default"]();
+    this.eventHandler = new _KernelEvents__WEBPACK_IMPORTED_MODULE_1__["default"]();
   }
   registerPrograms(programs) {
     if (Object.keys(programs).length) {
@@ -75,6 +114,15 @@ class Kernel {
   }
   destroy(programName) {
     this.programHandler.endProgram(programName);
+  }
+  emit(type, detail = {}) {
+    this.eventHandler.emit(type, detail);
+  }
+  on(type, handler, options) {
+    return this.eventHandler.on(type, handler, options);
+  }
+  once(type, handler) {
+    this.eventHandler.once(type, handler);
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Kernel);
