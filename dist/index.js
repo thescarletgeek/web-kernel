@@ -56,7 +56,7 @@ class ProgramHandler {
   addProgram(key, program) {
     this.programs[key] = new program();
   }
-  startProgram(key) {
+  startProgram(key, args = null) {
     if (!this.programs[key]) {
       (0,_utils__WEBPACK_IMPORTED_MODULE_0__.logger)(_utils__WEBPACK_IMPORTED_MODULE_0__.LoggerLevel.WARNING, "Program not found.");
       return;
@@ -65,7 +65,7 @@ class ProgramHandler {
       (0,_utils__WEBPACK_IMPORTED_MODULE_0__.logger)(_utils__WEBPACK_IMPORTED_MODULE_0__.LoggerLevel.ERROR, "onStart method is not defined in the program.");
       return;
     }
-    this.programs[key].onStart();
+    this.programs[key].onStart(args);
   }
   endProgram(key) {
     if (!this.programs[key]) {
@@ -153,8 +153,8 @@ class Kernel {
       });
     }
   }
-  start(programName) {
-    this.programHandler.startProgram(programName);
+  start(programName, args = null) {
+    this.programHandler.startProgram(programName, args);
   }
   destroy(programName) {
     this.programHandler.endProgram(programName);

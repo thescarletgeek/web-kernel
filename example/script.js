@@ -8,7 +8,9 @@ window.kernel = new Kernel();
 // Programs
 registerPrograms(window.kernel);
 
-window.kernel.start("my-program");
+window.kernel.start("my-program", {
+    message: "Message is registered."
+});
 
 document.getElementById("link-button").addEventListener("click", () => window.kernel.destroy("my-program"));
 

@@ -22,8 +22,8 @@ class Kernel {
         }
     }
 
-    start(programName: string) {
-        this.programHandler.startProgram(programName);
+    start(programName: string, args: any = null) {
+        this.programHandler.startProgram(programName, args);
     }
 
     destroy(programName: string) {

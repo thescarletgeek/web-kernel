@@ -8,7 +8,7 @@ declare class Kernel {
     requestHandler: RequestHandler;
     constructor();
     registerPrograms(programs: IKernelProgram): void;
-    start(programName: string): void;
+    start(programName: string, args?: any): void;
     destroy(programName: string): void;
     emit<K extends keyof IEventMap>(type: K, detail?: IEventMap[K]): void;
     on<K extends keyof IEventMap>(type: K, handler: IEventHandler<IEventMap[K]>, options?: AddEventListenerOptions): IUnsubscribeEvent;

@@ -1,6 +1,6 @@
 export default class MyProgram {
-    onStart() {
-        console.log("My Program is started");
+    onStart(args) {
+        console.log("My Program is started :: ", args);
     }
 
     onDestroy() {

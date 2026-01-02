@@ -12,7 +12,7 @@ class ProgramHandler {
         this.programs[key] = new program();
     }
 
-    startProgram(key: string) {
+    startProgram(key: string, args: any = null) {
         if(!this.programs[key]) {
             logger(LoggerLevel.WARNING, "Program not found.");
             return;
@@ -23,7 +23,7 @@ class ProgramHandler {
             return;
         }
 
-        this.programs[key].onStart();
+        this.programs[key].onStart(args);
     }
 
     endProgram(key: string) {
