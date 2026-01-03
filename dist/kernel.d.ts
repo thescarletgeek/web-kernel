@@ -19,5 +19,6 @@ declare class Kernel {
     once<K extends keyof IEventMap>(type: K, handler: IEventHandler<IEventMap[K]>): void;
     registerRequests(requests: IKernelRequest): void;
     send(key: string): void;
+    metrics(): void;
 }
 export default Kernel;

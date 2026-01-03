@@ -81,6 +81,14 @@ class Kernel {
     send(key: string) {
         this.requestHandler.startRequest(key);
     }
+
+    metrics() {
+        const data: any = {};
+
+        data["programs"] = this.programHandler.getAllProgramStatus();
+
+        console.log(data);
+    }
 }
 
 export default Kernel;

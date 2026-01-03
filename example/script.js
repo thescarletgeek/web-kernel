@@ -22,7 +22,7 @@ document.getElementById("link-button").addEventListener("click", () => window.ke
 
 
 // Events
-window.kernel.once("kernel:test", (e) => {
+window.kernel.on("kernel:test", (e) => {
     console.log("Kernel test event fired :: ", e.detail);
 });
 
@@ -39,6 +39,10 @@ registerRequests(window.kernel);
 
 document.getElementById("trail-button").addEventListener("click", () => {
     window.kernel.send("getposts");
+});
+
+document.getElementById("metrics-button").addEventListener("click", () => {
+    window.kernel.metrics();
 });
 
 document.addEventListener("DOMContentLoaded", () => {

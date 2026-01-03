@@ -4,12 +4,12 @@ export enum LoggerLevel {
     WARNING = "WARNING :: "
 }
 
-export function logger(level: LoggerLevel, message: any) {
+export function logger(level: LoggerLevel, message: any, data: any = undefined) {
     if(level == LoggerLevel.ERROR) {
-        console.error(LoggerLevel.ERROR, message);
+        console.error(LoggerLevel.ERROR, message, data);
     } else if(level == LoggerLevel.WARNING) {
-        console.warn(LoggerLevel.WARNING, message);
+        console.warn(LoggerLevel.WARNING, message, data);
     } else {
-        console.log(LoggerLevel.LOG, message);
+        console.log(LoggerLevel.LOG, message, data);
     }
 }

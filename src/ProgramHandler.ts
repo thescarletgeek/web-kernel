@@ -1,43 +1,91 @@
-import { IKernelProgram } from "./types/IKernel";
+import { ProgramState } from "./types/IKernel";
 import { logger, LoggerLevel } from "./utils";
 
 class ProgramHandler {
-    programs: IKernelProgram = {};
+    private programs = new Map();
+    private programState = new Map();
 
     constructor() {
         //
     }
 
     addProgram(key: string, program: any) {
-        this.programs[key] = new program();
+        if(this.programs.has(key)) {
+            logger(LoggerLevel.WARNING, `Program ${key} already exists.`);
+            return;
+        }
+
+        this.programs.set(key, new program());
+        this.programState.set(key, ProgramState.IDLE);
     }
 
     startProgram(key: string, args: any = null) {
-        if(!this.programs[key]) {
-            logger(LoggerLevel.WARNING, "Program not found.");
+        const program = this.programs.get(key);
+        if(!program) {
+            logger(LoggerLevel.WARNING, `Program ${key} not found.`);
             return;
         }
 
-        if(typeof this.programs[key].onStart !== "function") {
-            logger(LoggerLevel.ERROR, "onStart method is not defined in the program.");
+        const status = this.programState.get(key);
+        if(status === ProgramState.RUNNING) {
+            logger(LoggerLevel.WARNING, `Program ${key} is already running.`);
             return;
         }
 
-        this.programs[key].onStart(args);
+        if(typeof program.onStart !== "function") {
+            logger(LoggerLevel.ERROR, `onStart method is not defined in the program ${key}.`);
+            return;
+        }
+
+        try {
+            program.onStart(args);
+            this.programState.set(key, ProgramState.RUNNING);
+        } catch(error) {
+            this.programState.set(key, ProgramState.ERROR);
+            logger(LoggerLevel.ERROR, `Error occured in program ${key} - `, error);
+        }
     }
 
     endProgram(key: string) {
-        if(!this.programs[key]) {
-            logger(LoggerLevel.WARNING, "Program not found.");
+        const program = this.programs.get(key);
+        if(!program) {
+            logger(LoggerLevel.WARNING, `Program ${key} not found.`);
             return;
         }
 
-        if(typeof this.programs[key].onDestroy !== "function") {
-            logger(LoggerLevel.ERROR, "onDestroy method is not defined in the program.");
+        if(this.programState.get(key) !== ProgramState.RUNNING) {
+            logger(LoggerLevel.WARNING, `Program ${key} is not running.`);
             return;
         }
 
-        this.programs[key].onDestroy();
+        if(typeof program.onDestroy !== "function") {
+            logger(LoggerLevel.ERROR, `onDestroy method is not defined in the program ${key}.`);
+            return;
+        }
+        
+        try {
+            program.onDestroy();
+            this.programState.set(key, ProgramState.STOPPED);
+        } catch(error) {
+            this.programState.set(key, ProgramState.ERROR);
+            logger(LoggerLevel.ERROR, `Error occured in program ${key} - `, error);
+        }
+    }
+
+    getProgramsByState(programState: ProgramState) {
+        const status: any = {};
+
+        for(const [key, state] of this.programState) {
+            if(state === programState) {
+                status[key] = state;
+            }
+        }
+
+        return status;
+    }
+
+    getAllProgramStatus() {
+        return this.programState;
     }
 }
 

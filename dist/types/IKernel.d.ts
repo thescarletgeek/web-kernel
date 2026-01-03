@@ -12,3 +12,16 @@ export declare enum KernelState {
     BOOTING = "BOOTING",
     BOOTED = "BOOTED"
 }
+export declare enum ProgramState {
+    IDLE = "IDLE",
+    RUNNING = "RUNNING",
+    STOPPED = "STOPPED",
+    ERROR = "ERROR"
+}
+export interface IKernelProgramInstance {
+    onStart: () => void;
+    onDestroy: () => void;
+}
+export interface IKernelProgramConstructor {
+    new (): IKernelProgramInstance;
+}
