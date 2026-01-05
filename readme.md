@@ -30,13 +30,13 @@ To install web kernel, either install through npm or directly incldue the script
 
 Install through **npm** :
 ```
-npm install web-kernel
+npm install @thescarletgeek/web-kernel
 ```
 
 To initialize the kernel :
 
 ```js
-import { Kernel } from "web-kernel";
+import { Kernel } from "@thescarletgeek/web-kernel";
 
 // Initialize the kernel
 window.kernel = new Kernel();
