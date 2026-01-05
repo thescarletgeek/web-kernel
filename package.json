@@ -1,5 +1,5 @@
 {
-    "name": "web-kernel",
+    "name": "@thescarletgeek/web-kernel",
     "version": "1.0.0",
     "description": "A kernel for web to handle scripting",
     "main": "dist/index.js",
